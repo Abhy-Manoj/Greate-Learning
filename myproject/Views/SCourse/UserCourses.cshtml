@@ -1,0 +1,107 @@
+﻿@model IEnumerable<myproject.Models.SelectedCourse>
+
+@{
+    ViewBag.Title = "UserCourses";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+
+<h2>Your Courses</h2>
+
+<hr />
+
+
+@if (Model.Any())
+{
+    <div>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Course Name")
+                </th>
+
+                <th>
+                    @Html.DisplayName("Description")
+                </th>
+
+                <th>
+                    @Html.DisplayName("Duration (In Days)")
+                </th>
+                <th>
+                    @Html.DisplayName("Image")
+                </th>
+                <th>
+                </th>
+                <th>
+                    Actions
+                </th>
+                <th>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Duration)
+                    </td>
+                    <td>
+                        <img src="@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
+                    </td>
+                    <td>
+                        <button value=@Html.DisplayFor(modelItem => item.CourseId) class="btn btn-primary myBttn">Learn</button>
+                    </td>
+                    <td>
+                        <button value=@Html.DisplayFor(modelItem => item.CourseId) class="btn btn-success myBtnn">Take Quiz</button>
+                    </td>
+                    <td>
+                        <button value=@Html.DisplayFor(modelItem => item.CourseId) class="btn btn-danger unenroll-button">Unenroll</button>
+                    </td>
+                    <td></td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+else
+{
+<div>
+    <p>No courses are selected! Select a course <a href="@Url.Action("ViewTasks", "User")">here</a></p>
+</div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('.unenroll-button').click(function () {
+            var courseId = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("UnjoinCourse", "SCourse")',
+                type: 'POST',
+                data: { courseId: courseId },
+                success: function (data) {
+                    alert('Unenrolled successfully!');
+                    location.reload();                },
+                error: function () {
+                    alert('Error unenrolling from the course. Please try again later.');
+                }
+            });
+        });
+    });
+
+    $('.myBttn').click(function () {
+    var courseId = $(this).val();
+    window.location.href = '@Url.Action("CourseDetails", "SCourse")?courseId=' + courseId;
+    });
+
+
+    $('.myBtnn').click(function () {
+    var courseId = $(this).val();
+    window.location.href = '@Url.Action("TakeQuiz", "Quiz")?courseId=' + courseId;
+});
+
+</script>

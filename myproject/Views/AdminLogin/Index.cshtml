@@ -1,0 +1,92 @@
+﻿@model IEnumerable<myproject.EmployeeCrudResult>
+
+@{
+    ViewBag.Title = "Employee Details";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+
+}
+
+<head>
+    <style>
+       
+
+
+
+        
+
+    </style>
+</head>
+
+<h2>Employee Details</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="table-Container">
+    <table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Empid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Task)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AssignedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubmissionDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Empid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Task)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AssignedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubmissionDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            <button onclick="location.href='@Url.Action("Edit", new { id = item.Empid })'" class="btn btn-primary">Edit</button>
+            <button onclick="location.href='@Url.Action("Details", new { id = item.Empid })'" class="btn btn-info">Details</button>
+            <button onclick="location.href='@Url.Action("Delete", new { id = item.Empid })'" class="btn btn-danger">Delete</button>
+
+        </td>
+    </tr>
+}
+
+</table>
+    </div>

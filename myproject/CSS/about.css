@@ -1,0 +1,37 @@
+﻿.cont{
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+}
+
+p {
+    text-align: justify;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+.contain {
+    max-width: 650px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 70px;
+    margin-left: 0px;
+}
+
+.address-content {
+    display: flex;
+}
+
+.address-text {
+    margin-top: 30px;
+    margin-left: 40px;
+    font-size: 20px;
+}
+
+.address-image{
+    margin-left:30px;
+}

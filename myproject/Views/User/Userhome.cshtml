@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Userhome";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+<link href="~/CSS/Userhome.css" rel="stylesheet" />
+<div style="text-align: left;">
+    <h5>Welcome, @ViewBag.Username</h5>
+</div>
+
+<div class="dashboard">
+    <a href="@Url.Action("ViewTasks", "User")" class="box box1">
+        <h4>View Courses</h4>
+    </a>
+    <a href="@Url.Action("UserCourses", "SCourse")" class="box box2">
+        <h4>Selected Courses</h4>
+    </a>
+    <a href="@Url.Action("ViewUserProfile", "User", new { userId = Session["UserId"] })" class="box box3">
+        <h4>Edit Profile</h4>
+    </a>
+</div>

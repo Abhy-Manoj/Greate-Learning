@@ -1,0 +1,164 @@
+﻿@{
+    ViewBag.Title = "User Profile";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+<link href="~/CSS/Course.css" rel="stylesheet" />
+<div>
+    <h2>User Profile</h2>
+    <hr />
+<link href="~/CSS/ProfileView.css" rel="stylesheet" />
+<dl class="dl-horizontal">
+
+    <dt>Username</dt>
+    <dd>: @Model.Username</dd>
+
+    <dt>First name</dt>
+    <dd>: @Model.FirstName</dd>
+
+    <dt>Last name</dt>
+    <dd>: @Model.LastName</dd>
+
+    <dt>E-mail</dt>
+    <dd>: @Model.Email</dd>
+
+    <dt>Date of birth</dt>
+    <dd>: @Model.DateOfBirth</dd>
+
+    <dt>Gender</dt>
+    <dd>: @Model.Gender</dd>
+
+    <dt>Phone</dt>
+    <dd>: @Model.Phone</dd>
+
+    <dt>State</dt>
+    <dd>: @Model.State</dd>
+
+    <dt>City</dt>
+    <dd>: @Model.City</dd>
+
+    <dd><button value="@Model.Id" class="btn btn-primary myBtn">Update</button></dd>
+</dl>
+</div>
+<div id="myModal" class="modal">
+
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form>
+            <div class="container">
+                <center>  <h4>Update User Details</h4> </center>
+                <hr>
+                <label> First Name </label>
+                <input type="text" id="fst" name="firstname" placeholder="First Name" size="17" required />
+                <label> Last Name: </label>
+                <input type="text" id="lst" name="lastname" placeholder="Last Name" size="17" required />
+                <label> Username: </label>
+                <input type="text" id="usr" name="username" placeholder="username" size="20" required /><br /><br />
+                <label> Email: </label>
+                <input type="text" id="eml" name="email" placeholder="E-mail" size="15" required />
+                <label> Phone: </label>
+                <input type="text" id="phn" name="phone" placeholder="Phone" size="15" required />
+                <label> Gender: </label>
+                <input type="text" id="gen" name="gender" placeholder="Gender" size="15" required />
+                <label> Date of birth: </label>
+                <input type="text" id="dob" name="dob" placeholder="Date of birth" size="15" required />
+                <label> State: </label>
+                <input type="text" id="stte" name="state" placeholder="State" size="15" required />
+                <label> City: </label>
+                <input type="text" id="cty" name="city" placeholder="City" size="15" required />
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" id="updtsbmt" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+var modal = document.getElementById("myModal");
+var span = document.querySelector(".close");
+var idsecrt = "";
+
+$(".myBtn").click(function () {
+    $("#fst").val("");
+    $("#lst").val("");
+    $("#usr").val("");
+    $("#eml").val("");
+    $("#phn").val("");
+    $("#gen").val("");
+    $("#stte").val("");
+    $("#cty").val("");
+    $("#dob").val("");
+
+    var param = $(this).val();
+    idsecrt = param;
+    modal.style.display = "block";
+
+    $.ajax({
+        type: "POST",
+        url: "@Url.Action("Details", "EUser")",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ id: param }),
+        dataType: "json",
+        success: function (data) {
+            $("#fst").val(data.FirstName);
+            $("#lst").val(data.LastName);
+            $("#usr").val(data.Username);
+            $("#eml").val(data.Email);
+            $("#phn").val(data.Phone);
+            $("#gen").val(data.Gender);
+            $("#stte").val(data.State);
+            $("#cty").val(data.City);
+            $("#dob").val(data.DateOfBirth);
+        }
+    });
+});
+
+$("#updtsbmt").click(function () {
+    var fst = $("#fst").val();
+    var lst = $("#lst").val();
+    var usr = $("#usr").val();
+    var eml = $("#eml").val();
+    var phn = $("#phn").val();
+    var gen = $("#gen").val("");
+    var stte = $("#stte").val("");
+    var cty = $("#cty").val("");
+    var dob = $("#cty").dob("");
+
+    var param = JSON.stringify({
+        Id: idsecrt,
+        FirstName: fst,
+        LastName: lst,
+        Username: usr,
+        Email: eml,
+        Phone: phn,
+        Gender: gen,
+        State: stte,
+        City: cty,
+        DateOfBirth: dob
+    });
+
+    modal.style.display = "block";
+
+    $.ajax({
+        type: "POST",
+        url: "@Url.Action("Edit", "EUser")",
+        contentType: "application/json; charset=utf-8",
+        data: param,
+        dataType: "json",
+        success: function (data) {
+            window.location.href = window.location.href;
+        }
+    });
+
+    idsecrt = "";
+});
+
+span.onclick = function () {
+    modal.style.display = "none";
+};
+
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+};
+</script>

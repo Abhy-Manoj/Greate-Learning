@@ -1,0 +1,41 @@
+﻿.dashboard {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.box {
+    flex: 0 0 calc(50% - 10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    height: 100px;
+}
+
+    .box:hover {
+        background-color: #808080;
+    }
+
+.box1 {
+    background-color: #196115;
+}
+
+.box2 {
+    background-color: #ae0f0f;
+}
+
+.box3 {
+    background-color: #c0bd4d;
+}
+
+.validation-error {
+    color: red; 
+}

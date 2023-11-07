@@ -1,0 +1,41 @@
+﻿@model myproject.Models.Login
+
+@{
+    ViewBag.Title = "Sign in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/CSS/Login.css" rel="stylesheet" />
+<script src="~/javascript/login-validation.js"></script>
+
+<div class="login-container">
+    <h2 class="login-title">Sign in</h2>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @onfocusout = "validateUsername()", @placeholder = "Enter username", required = "required" } })
+            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            <small id="username-error" class="text-danger"></small>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @onfocusout = "validatePassword()", @placeholder = "Enter password", required = "required" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            <small id="password-error" class="text-danger"></small>
+        </div>
+
+        <div class="login-button">
+            <input type="submit" value="Sign in" class="btn btn-primary" />
+        </div>
+        <div class="login-link">
+            <span class="new-account-text">New User?</span>
+            <a href="@Url.Action("AddDetail", "Registration")">Sign up</a>
+        </div>
+    }
+</div>

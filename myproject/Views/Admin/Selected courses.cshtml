@@ -1,0 +1,43 @@
+﻿@model IEnumerable<myproject.Models.AssignedProjects>
+
+@{
+    ViewBag.Title = "Selected Courses";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+
+<h5>Selected Courses</h5>
+<hr />
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Project_title)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Project_title)
+        </td>
+        <td>
+            
+        </td>
+    </tr>
+}
+
+</table>

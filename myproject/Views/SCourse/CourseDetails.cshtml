@@ -1,0 +1,20 @@
+﻿@model myproject.Models.Courses
+
+@{
+    ViewBag.Title = "Course Details";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+<link href="~/CSS/CList.css" rel="stylesheet" />
+<h2>Learn: @Model.CourseName</h2>
+
+<div>
+    <video width="560" height="315" controls>
+        <source src="@Model.VideoUrl" type="video/mp4">
+        <source src="@Model.VideoUrl" type="video/webm">
+        <source src="@Model.VideoUrl" type="video/3gp">
+        Your browser does not support the video tag.
+    </video>
+
+</div>
+<h4>@Model.Description in @Model.Duration Days</h4>
+<a href="@Url.Action("UserCourses", "SCourse")" class="go-back-link">Go Back</a>

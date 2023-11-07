@@ -1,0 +1,91 @@
+﻿@{
+
+
+    string currentUser = (string)Session["Username"];
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Great Learning</title>
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.4.3/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.4.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="~/CSS/Adminlayout.css" rel="stylesheet" />
+</head>
+<body>
+
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-logo">
+            <img src="~/Content/project-management.png" alt="Logo" />
+            <h4 style="color: white; margin: 0;">Great Learning</h4>
+        </div><br />
+        <ul class="sidebar-menu">
+            
+            <li>
+                <a href="@Url.Action("Userhome", "User")">&nbsp;<i class="fa fa-home"></i> Dashboard</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ViewTasks", "User")">&nbsp;<i class="fa fa-book"></i> Available Courses</a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("UserCourses", "SCourse")">&nbsp;<i class="fa fa-newspaper-o"></i> Selected Courses</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ViewUserProfile", "User", new { userId = Session["UserId"]})">&nbsp;<i class="fa fa-user-plus"></i> Edit Profile</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Userhome", "User")"></a>
+
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1 justify-content-end">
+                    <li>@Html.ActionLink("Home", "Userhome", "User", new { area = "" }, new { @class = "nav-link" })</li>&nbsp;
+                    <li style="color: #808080; padding-top:8px; "><i class="fa fa-user"></i>&nbsp;@currentUser</li>&nbsp;
+                    <li>@Html.ActionLink("Logout", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container container-body">
+        @RenderBody()
+
+    </div>
+
+    <footer class="footer">
+        <!-- Footer content -->
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @RenderPage("Footer.cshtml")
+
+    <script type="text/javascript">
+        // to prevent going back---------------------------
+        function preventBack() {
+            window.history.forward();
+        }
+        setTimeout("preventBack()", 1);
+        window.onunload = function () {
+            null;
+        };
+    </script>
+
+</body>
+</html>

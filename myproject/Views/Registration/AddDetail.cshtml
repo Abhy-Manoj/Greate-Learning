@@ -1,0 +1,152 @@
+﻿@model myproject.Models.Registration
+
+@{
+    ViewBag.Title = "Sign up";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div id="errorMessage" class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+@{
+    List<string> state_arr = new List<string>
+    {
+        "Andaman & Nicobar", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra & Nagar Haveli", "Daman & Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu & Kashmir", "Jharkhand", "Karnataka", "Kerala", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Orissa", "Pondicherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Tripura", "Uttar Pradesh", "Uttaranchal", "West Bengal"
+    };
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/CSS/Registration_validation_Style.css" rel="stylesheet" />
+    <script src="~/javascript/Registration_validation.js"></script>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    <div class="form-container">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <h4 style="text-align: center;">Sign up</h4>
+            <hr />
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-row">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, "First name")
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First name", @id = "fname", @onfocusout = "Checkfirstname()", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, "Last name")
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last name", @id = "lname", @onfocusout = "Checklastname()", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DateOfBirth, "Date of birth")
+                    @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control", @onfocusout = "validateDateOfBirth()", required = "required", @max = DateTime.Now.ToString("yyyy-MM-dd") } })
+                    @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                    <small class="text-danger"></small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Gender)
+
+                    <div style="margin-top:5px">
+                        <label class="radio-label">
+                            @Html.RadioButtonFor(model => model.Gender, "Male", new { @required = "required" })
+                            Male&nbsp;&nbsp;
+                        </label>
+
+                        <label class="radio-label">
+                            @Html.RadioButtonFor(model => model.Gender, "Female", new { @required = "required" })
+                            Female&nbsp;&nbsp;
+                        </label>
+
+                        <label class="radio-label">
+                            @Html.RadioButtonFor(model => model.Gender, "Other", new { @required = "required" })
+                            Other
+                        </label>
+                    </div>
+
+                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email)
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "E-mail", @id = "Email", @onfocusout = "CheckEmail()", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Phone)
+                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone number", @id = "Phone", @onfocusout = "CheckPhoneNumber()", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.State)
+                    @Html.DropDownListFor(model => model.State, new SelectList(state_arr), "Select State", new { @class = "form-control", @id = "State", @onchange = "print_city('City', this.selectedIndex)", required = "required" })
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.City)
+                    @Html.DropDownListFor(model => model.City, new SelectList(new string[] { "Select City" }), "Select City", new { @class = "form-control", @id = "City", required = "required" })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Username)
+                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter your email as username", @id = "Username", @onfocusout = "CheckUsername()", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password)
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password", @id = "Password", @onfocusout = "CheckPassword()", type = "password", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConfirmPassword)
+                    @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @placeholder = "Confirm password", @id = "ConfirmPassword", @onfocusout = "CheckConfirmPassword()", type = "password", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                    <small></small>
+                </div>
+
+                <div class="form-group" style="margin-top:30px;">
+                    <h6>Already a member? <a href="@Url.Action("Login", "Login")">Sign in</a></h6>
+                </div>
+            </div>
+
+            <div class="submit-button-container">
+                <input type="submit" value="Sign up" class="btn btn-primary submit-button" />
+            </div>
+
+        }
+    </div>
+</body>
+</html>

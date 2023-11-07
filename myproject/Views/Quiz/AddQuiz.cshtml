@@ -1,0 +1,67 @@
+﻿@model myproject.Models.Quiz
+
+@{
+    ViewBag.Title = "AddQuiz";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+
+@if (TempData["QuizAddedMessage"] != null)
+{
+    <div class="alert alert-success" id="quizAddedMessage">
+        @TempData["QuizAddedMessage"]
+    </div>
+}
+
+<h4>Add Quiz to Course</h4>
+
+@using (Html.BeginForm("AddQuiz", "Quiz", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.HiddenFor(model => model.CourseId)
+
+        @Html.LabelFor(model => model.Question)
+        @Html.TextBoxFor(model => model.Question, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Option1)
+        @Html.TextBoxFor(model => model.Option1, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Option2)
+        @Html.TextBoxFor(model => model.Option2, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Option3)
+        @Html.TextBoxFor(model => model.Option3, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Option4)
+        @Html.TextBoxFor(model => model.Option4, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.C_Option)
+        @Html.DropDownListFor(model => model.C_Option, new SelectList(new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Option 1", Value = "1" },
+            new SelectListItem { Text = "Option 2", Value = "2" },
+            new SelectListItem { Text = "Option 3", Value = "3" },
+            new SelectListItem { Text = "Option 4", Value = "4" },
+        }, "Value", "Text"), "Select the Correct Option", new { @class = "form-control", required = "required", })
+    </div>
+    <br />
+
+    <button type="submit" class="btn btn-primary">Add Quiz</button>
+}
+
+<script>
+    setTimeout(function () {
+        $("#quizAddedMessage").fadeOut("slow");
+    }, 1000);
+</script>

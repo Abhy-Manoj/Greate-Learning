@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<link href="~/CSS/Layout.css" rel="stylesheet" />
+
+<main>
+    <div class="container1">
+        <h4 style="color:#fff">Get Started</h4>
+        <h6 style="color:#fff">Sign up now to start learning</h6>
+        <a href="@Url.Action("AddDetail", "Registration")" class="btn btn-primary">Sign up</a>
+    </div>
+    <div class="container2">
+        <h4 style="color:#fff">Already a Member?</h4>
+        <h6 style="color:#fff">Sign in to access your account</h6>
+        <a href="@Url.Action("Login", "Login")" class="btn btn-primary">Sign in</a>
+    </div>
+</main>

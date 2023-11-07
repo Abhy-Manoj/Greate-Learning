@@ -1,0 +1,57 @@
+﻿@model myproject.Models.ViewEmployees
+
+@{
+    ViewBag.Title = "Edit User Details";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+<link href="~/CSS/Course.css" rel="stylesheet" />
+<h2>Your Details</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("First Name")
+        </th>
+        <th>
+            @Html.DisplayName("Last Name")
+        </th>
+        <th>
+            @Html.DisplayName("Username")
+        </th>
+        <th>
+            @Html.DisplayName("Email ID")
+        </th>
+        <th>
+            @Html.DisplayName("Phone")
+        </th>
+        <th>
+            @Html.DisplayName("Gender")
+        </th>
+        <th>
+            @Html.DisplayName("Actions")
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(model => model.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Phone)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Gender)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditUser", new { id = Model.Id })
+        </td>
+    </tr>
+</table>

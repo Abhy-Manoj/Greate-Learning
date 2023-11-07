@@ -1,0 +1,73 @@
+﻿@model IEnumerable<myproject.crud_add_employeeResult>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+
+<h5>Employee Details</h5>
+<hr />
+
+<p>
+    <button onclick="location.href='@Url.Action("Create")'" class="btn btn-primary">Create New</button>
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Employee Id")
+        </th>
+        <th>
+            @Html.DisplayName("Employee name")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Designation)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>*@
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee_Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Designation)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>*@
+        <td>
+            <button onclick="location.href='@Url.Action("Edit", new { id = item.Employee_Id })'" class="btn btn-primary">Edit</button>
+            <button onclick="location.href='@Url.Action("Details", new { id = item.Employee_Id })'" class="btn btn-info">Details</button>
+            <button onclick="location.href='@Url.Action("Delete", new { id = item.Employee_Id })'" class="btn btn-danger">Delete</button>
+
+        </td>
+    </tr>
+}
+
+</table>

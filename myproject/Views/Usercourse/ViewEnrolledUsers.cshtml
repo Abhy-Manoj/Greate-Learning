@@ -1,0 +1,24 @@
+﻿@model List<myproject.Models.UserModel>
+
+@{
+    ViewBag.Title = "ViewEnrolledUsers";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+<link href="~/CSS/CList.css" rel="stylesheet" />
+<h2>Users Enrolled in Course</h2>
+<hr />
+
+@if (Model.Count > 0)
+{
+    <ul class="user-list">
+        @foreach (var user in Model)
+        {
+            <li class="user-item">@user.FirstName @user.LastName (@user.Username)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No users currently enrolled</p>
+}
+<a href="@Url.Action("ListCourses", "UserCourse")" class="go-back-link">Go Back</a>

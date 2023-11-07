@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Courses";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+@using myproject.Models
+@model Courses
+<!DOCTYPE html>
+<h2>Add new course</h2>
+<script src="~/javascript/course.js"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create Course</title>
+    <link href="~/CSS/CCourse.css" rel="stylesheet" />
+</head>
+<body>
+    <div style="margin: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 300px;">
+        @using (Html.BeginForm("Create", "Course", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <span>Course Name:</span> @Html.TextBoxFor(m => m.CourseName, new { placeholder = "Enter Course Name", required = "required" })<br />
+            @Html.ValidationMessageFor(m => m.CourseName)
+
+            <span>Description: </span> @Html.TextBoxFor(m => m.Description, new { placeholder = "Enter Description", required = "required" })<br />
+            @Html.ValidationMessageFor(m => m.Description)
+
+            <span>Duration: </span>@Html.TextBoxFor(m => m.Duration, new { placeholder = "Enter Duration", required = "required" })<br />
+            @Html.ValidationMessageFor(m => m.Duration)
+
+            <span>Enrollment Count:</span> @Html.TextBoxFor(m => m.Count, new { placeholder = "Enter Enrollment Count", required = "required" })<br />
+            @Html.ValidationMessageFor(m => m.Count)
+
+            <span>Upload Image: </span> <input type="file" name="ImageFile" required="required" accept="image/*" /><br />
+
+            <span>Upload Video: </span> <input type="file" name="VideoFile" required="required" accept="video/*" /><br />
+
+            <input id="Submit" type="submit" value="Submit" />
+        }
+    </div>
+    <div id="validationErrors" class="text-danger"></div>
+</body>
+</html>

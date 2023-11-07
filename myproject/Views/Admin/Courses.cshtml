@@ -1,0 +1,206 @@
+﻿@model IEnumerable<myproject.Models.Courses>
+
+@{
+    ViewBag.Title = "Courses";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="~/CSS/Course.css" rel="stylesheet" />
+
+<h2>Courses Available</h2>
+
+<div>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Course Name")
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+
+            <th>
+                @Html.DisplayName("Duration (In Days)")
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+            </th>
+            <th>
+                Actions
+            </th>
+            <th>
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    <img src="@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
+                </td>
+                <td>
+                    <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-primary myBtn">Update</button>
+                </td>
+                <td>
+                    <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-success myBtnn">Add Quiz</button>
+                </td>
+                <td>
+                    <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-danger myBttn">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form>
+                <div class="container">
+                    <center>  <h4>Update the Course</h4> </center>
+                    <hr>
+                    <label> Course Name </label>
+                    <input type="text" id="crsnm" name="firstname" placeholder="CourseName" size="15" required />
+                    <label> Description: </label>
+                    <input type="text" id="desc" name="middlename" placeholder="Description" size="15" required />
+                    <label> Duration: </label>
+                    <input type="text" id="durtn" name="lastname" placeholder="Duration" size="15" required /><br /><br />
+
+                    <label> Current Image: </label>
+                    <span id="currentImage"></span>
+                    <label> New Image: </label>
+                    <input type="file" id="ImageFile" name="ImageFile" accept="image/*" /><br />
+
+                    <label> Current Video: </label>
+                    <span id="currentVideo"></span>
+                    <label> New Video: </label>
+                    <input type="file" id="VideoFile" name="VideoFile" />
+
+                    <button type="button" id="updtsbmt" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+var modal = document.getElementById("myModal");
+
+var span = document.getElementsByClassName("close")[0];
+
+var idsecrt = "";
+$('.myBtn').click(function (obj) {
+    $('#crsnm').val("");
+    $('#desc').val("");
+    $('#durtn').val("");
+    $('#ImageFile').val("");
+    $('#VideoFile').val("");
+    var param = obj.target.value;
+    idsecrt = param;
+    modal.style.display = "block";
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("Details", "Course")',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ id: param }),
+        dataType: 'json',
+        success: function (data) {
+            $('#crsnm').val(data.CourseName);
+            $('#desc').val(data.Description);
+            $('#durtn').val(data.Duration);
+            $('#currentImage').text(data.ImageUrl);
+            $('#currentVideo').text(data.VideoUrl);
+        }
+    });
+});
+
+$('#updtsbmt').click(function (obj) {
+    var crs = document.getElementById("crsnm").value;
+    var des = document.getElementById("desc").value;
+    var dur = document.getElementById("durtn").value;
+    var imgFile = document.getElementById("ImageFile").files[0];
+    var vidFile = document.getElementById("VideoFile").files[0];
+
+    if (crs.trim() === "") {
+        alert("Course Name is required.");
+        return;
+    }
+    if (des.trim() === "") {
+        alert("Course Description is required.");
+        return;
+    }
+    if (dur.trim() === "") {
+        alert("Course Duration is required.");
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append("Id", idsecrt);
+    formData.append("CourseName", crs);
+    formData.append("Description", des);
+    formData.append("Duration", dur);
+
+    if (imgFile) {
+        formData.append("ImageFile", imgFile);
+    }
+
+    if (vidFile) {
+        formData.append("VideoFile", vidFile);
+    }
+
+    modal.style.display = "block";
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("Edit", "Course")',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            window.location.href = window.location.href;
+        }
+    });
+    idsecrt = "";
+});
+$('.myBtnn').click(function (obj) {
+    var param = obj.target.value;
+    window.location.href = '@Url.Action("AddQuiz", "Quiz")' + '?courseId=' + param;
+});
+
+    $('.myBttn').click(function (obj) {
+    var param = obj.target.value;
+    if (confirm("Are you sure you want to delete this course?")) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeleteConfirmed", "Course")',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ id: param }),
+            dataType: 'json',
+            success: function (data) {
+                window.location.href = window.location.href;
+            },
+            error: function () {
+                alert("An error occurred while deleting the course.");
+            }
+        });
+    }
+});
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>

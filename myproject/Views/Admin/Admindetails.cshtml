@@ -1,0 +1,160 @@
+﻿@model IEnumerable<myproject.Models.RegisteredEmployees>
+
+@{
+    ViewBag.Title = "Admins";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+
+<h2>Registered Admins</h2>
+<link href="~/CSS/RegEmp.css" rel="stylesheet" />
+<div>
+    <hr />
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+
+            <th>
+                Action
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-primary myBtn">Update</button>
+                </td>
+                <td>
+                    <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-danger myBttn">Delete</button>
+                </td>
+
+            </tr>
+        }
+
+    </table>
+    <div id="myModal" class="modal">
+
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form>
+                <div class="container">
+                    <center>  <h4>Update Admin Details</h4> </center>
+                    <hr>
+                    <label> Username </label>
+                    <input type="text" id="usrnme" name="firstname" placeholder="Username" size="15" required />
+                    <label> Email ID: </label>
+                    <input type="text" id="eml" name="middlename" placeholder="Email" size="15" required />
+
+
+                    <button type="button" id="updtsbmt" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+<script>
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    var idsecrt = "";
+
+    function isValidEmail(email) {
+        var emailPattern = /^[\w]+@@[\w]+?\.[a-zA-Z]{2,3}$/;
+        return emailPattern.test(email);
+    }
+
+    $('.myBtn').click(function (obj) {
+        $('#usrnme').val("");
+        $('#eml').val("");
+        $('#pswd').val("");
+        var param = obj.target.value;
+        idsecrt = param;
+        modal.style.display = "block";
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Details", "Newadmin")',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ id: param }),
+            dataType: 'json',
+            success: function (data) {
+                $('#usrnme').val(data.Username);
+                $('#eml').val(data.Email);
+                $('#pswd').val(data.Password);
+            }
+        });
+    });
+
+    $('#updtsbmt').click(function (obj) {
+        var usr = document.getElementById("usrnme").value;
+        var eml = document.getElementById("eml").value;
+
+        if (usr.trim() === "") {
+            alert("Username is required.");
+            return;
+        }
+        if (!isValidEmail(eml)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        var param = JSON.stringify({
+            Id: idsecrt,
+            Username: usr,
+            Email: eml,
+        });
+        modal.style.display = "block";
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Edit", "Newadmin")',
+            contentType: 'application/json; charset=utf-8',
+            data: param,
+            dataType: 'json',
+            success: function (data) {
+                window.location.href = window.location.href;
+            }
+        });
+        idsecrt = ""
+    });
+
+    $('.myBttn').click(function (obj) {
+    var param = obj.target.value;
+    if (confirm("Are you sure you want to delete this admin?")) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeleteConfirmed", "Newadmin")',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ id: param }),
+            dataType: 'json',
+            success: function (data) {
+                window.location.href = window.location.href;
+            },
+            error: function () {
+                alert("An error occurred while deleting the admin.");
+            }
+        });
+    }
+});
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
