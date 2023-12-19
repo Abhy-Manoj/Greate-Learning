@@ -1,21 +1,32 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    var adminForm = document.getElementById("adminForm");
+﻿//Check for input from the user side
+document.addEventListener("DOMContentLoaded", function () {
     var usernameField = document.getElementById("Username");
     var passwordField = document.getElementById("Password");
     var confirmPasswordField = document.getElementById("ConfirmPassword");
     var emailField = document.getElementById("Email");
 
-    adminForm.onsubmit = function (event) {
-        if (!validateField(usernameField) || !validateField(passwordField) || !validateField(confirmPasswordField) || !validateField(emailField)) {
-            event.preventDefault();
-        }
+    usernameField.onblur = function () {
+        validateField(usernameField);
     };
 
+    passwordField.onblur = function () {
+        validateField(passwordField);
+    };
+
+    confirmPasswordField.onblur = function () {
+        validateField(confirmPasswordField);
+    };
+
+    emailField.onblur = function () {
+        validateField(emailField);
+    };
+
+    //Fields Validations
     function validateField(field) {
         var value = field.value;
         var errors = [];
-        var errorContainer = document.getElementById(field.id + "Error"); // Get the error container element
 
+        //trim the empty spaces in between
         if (field.id === "Username") {
             if (value.trim() === "") {
                 errors.push("Admin Name is required.");
@@ -28,30 +39,40 @@
             } else if (!/^(?=.*[A-Za-z])(?=.*\d)/.test(value)) {
                 errors.push("Password must include both a letter and a digit.");
             }
+        } else if (field.id === "ConfirmPassword") {
+            if (value.trim() === "") {
+                errors.push("Confirm Password is required.");
+            }
         } else if (field.id === "Email") {
             if (value.trim() === "") {
                 errors.push("Admin Email is required.");
             } else if (!validateEmail(value)) {
                 errors.push("Invalid Email Address.");
             }
-        } else if (field.id === "ConfirmPassword") {
+        }
+
+        // Validate Confirm Password with Password
+        if (field.id === "ConfirmPassword") {
             var passwordValue = passwordField.value;
             if (value !== passwordValue) {
                 errors.push("Confirm Password must match Password.");
             }
         }
 
+        //Error validations
+        var errorList = document.getElementById("validationErrors");
+        errorList.innerHTML = "";
+
         if (errors.length > 0) {
-            // Display errors
-            errorContainer.textContent = errors.join(", ");
-            return false; // Return false to indicate validation failure
-        } else {
-            // Clear errors
-            errorContainer.textContent = "";
-            return true; // Return true to indicate validation success
+            errors.forEach(function (error) {
+                var li = document.createElement("li");
+                li.textContent = error;
+                errorList.appendChild(li);
+            });
         }
     }
 
+    //Email validation
     function validateEmail(email) {
         var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         return emailRegex.test(email);

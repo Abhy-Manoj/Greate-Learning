@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Web.Mvc;
-using System.Web.Security;
 using myproject.Models;
 
 namespace myproject.Controllers
@@ -33,9 +33,9 @@ namespace myproject.Controllers
                 {
                     connection.Open();
 
-                    string adminQuery = "SELECT Id, Username FROM Login WHERE Username = @Username AND Password = @Password";
-                    using (SqlCommand command = new SqlCommand(adminQuery, connection))
+                    using (SqlCommand command = new SqlCommand("SP_LoginUser", connection))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@Username", model.Username);
                         command.Parameters.AddWithValue("@Password", model.Password);
 
@@ -53,9 +53,9 @@ namespace myproject.Controllers
 
                     if (!isAuthenticated)
                     {
-                        string userQuery = "SELECT Password, Id, Username FROM Signup WHERE Username = @Username";
-                        using (SqlCommand command = new SqlCommand(userQuery, connection))
+                        using (SqlCommand command = new SqlCommand("SP_SignupUser", connection))
                         {
+                            command.CommandType = CommandType.StoredProcedure;
                             command.Parameters.AddWithValue("@Username", model.Username);
 
                             using (SqlDataReader reader = command.ExecuteReader())
@@ -78,19 +78,20 @@ namespace myproject.Controllers
 
                 if (isAuthenticated)
                 {
-                    FormsAuthentication.SetAuthCookie(username, false);
                     Session["Username"] = model.Username;
+
                     if (userId != -1)
                     {
                         Session["UserId"] = userId;
                     }
-
                     if (userIsAdmin)
                     {
+                        Session["Roles"] = "Admin";
                         return RedirectToAction("Homepage", "Admin");
                     }
                     else
                     {
+                        Session["Roles"] = "User";
                         return RedirectToAction("Userhome", "User");
                     }
                 }
@@ -105,7 +106,6 @@ namespace myproject.Controllers
 
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
             return RedirectToAction("Login");
         }
     }

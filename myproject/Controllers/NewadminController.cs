@@ -6,6 +6,7 @@ public class NewadminController : Controller
 {
     private readonly string _connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
+    //admin details
     public ActionResult Index()
     {
         var dataAccess = new AdminDataAccess(_connectionString);
@@ -21,6 +22,7 @@ public class NewadminController : Controller
         return Json(admin, JsonRequestBehavior.DenyGet);
     }
 
+    //creating admin
     public ActionResult CreateAdmin()
     {
         return View();
@@ -34,6 +36,7 @@ public class NewadminController : Controller
         return RedirectToAction("Admindetails", "Admin");
     }
 
+    //Editing admin
     public ActionResult Edit(int id)
     {
         var dataAccess = new AdminDataAccess(_connectionString);
@@ -49,6 +52,7 @@ public class NewadminController : Controller
         return Json("Success", JsonRequestBehavior.DenyGet);
     }
 
+    //Edit admin password
     public ActionResult EditPass(int id)
     {
         var dataAccess = new AdminDataAccess(_connectionString);
@@ -64,6 +68,7 @@ public class NewadminController : Controller
         return Json("Success", JsonRequestBehavior.DenyGet);
     }
 
+    //Delete admin
     public ActionResult Delete(int id)
     {
         var dataAccess = new AdminDataAccess(_connectionString);

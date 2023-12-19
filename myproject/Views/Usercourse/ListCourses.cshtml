@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/examplelayout.cshtml";
 }
 
-<h2>Course List</h2>
+<h2>Course list</h2>
 <link href="~/CSS/CList.css" rel="stylesheet" />
 <hr />
 
@@ -14,9 +14,11 @@
     {
         <div class="course-item">
             <a href="@Url.Action("ViewEnrolledUsers", new { courseId = course.Id })" class="course-link">
-                <img src="@course.ImageUrl" alt="Course Image" class="course-image" style="max-width: 100px; max-height: 100px;" />
+                <img src="data:image/png;base64,@course.ImageUrl" alt="Course Image" class="course-image" style="max-width: 100px; max-height: 100px;" />
                 <p>@course.CourseName</p>
             </a>
+
+            <p>Enrolled: @course.Count</p>
         </div>
     }
 </div>

@@ -1,5 +1,12 @@
 ﻿@model myproject.Models.Login
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 @{
     ViewBag.Title = "Sign in";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,6 +17,7 @@
 
 <div class="login-container">
     <h2 class="login-title">Sign in</h2>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()

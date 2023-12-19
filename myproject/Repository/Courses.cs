@@ -7,13 +7,14 @@ using myproject.Models;
 
 public class CourseDataAccess
 {
-    private readonly string _connectionString = "Data Source=SYSLP1468;Initial Catalog=MyProjectDatabase;Integrated Security=True";
+    private readonly string _connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
     public CourseDataAccess(string connectionString)
     {
         _connectionString = connectionString;
     }
 
+    //Get the details of the course by id
     public Courses GetCourseById(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -36,7 +37,8 @@ public class CourseDataAccess
                             Description = reader["Description"].ToString(),
                             Duration = reader["Duration"].ToString(),
                             ImageUrl = reader["ImageUrl"].ToString(),
-                            VideoUrl = reader["VideoUrl"].ToString()
+                            VideoUrl = reader["VideoUrl"].ToString(),
+                            Count = (int)reader["Count"]
                         };
                     }
                 }
@@ -45,6 +47,7 @@ public class CourseDataAccess
         return null;
     }
 
+    //Get the details of all the courses
     public List<Courses> GetAllCourses()
     {
         List<Courses> courses = new List<Courses>();
@@ -66,7 +69,8 @@ public class CourseDataAccess
                             Description = reader["Description"].ToString(),
                             Duration = reader["Duration"].ToString(),
                             ImageUrl = reader["ImageUrl"].ToString(),
-                            VideoUrl = reader["VideoUrl"].ToString()
+                            VideoUrl = reader["VideoUrl"].ToString(),
+                            Count = (int)reader["Count"]
                         });
                     }
                 }
@@ -76,6 +80,7 @@ public class CourseDataAccess
         return courses;
     }
 
+    //Add new course to database
     public void InsertCourse(Courses course)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -97,6 +102,7 @@ public class CourseDataAccess
         }
     }
 
+    //Update the course
     public void UpdateCourse(Courses course)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -119,6 +125,7 @@ public class CourseDataAccess
         }
     }
 
+    //Delete the particular course
     public void DeleteCourse(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))

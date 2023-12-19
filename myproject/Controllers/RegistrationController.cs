@@ -13,8 +13,7 @@ namespace myproject.Controllers
 {
     public class RegistrationController : Controller
     {
-
-
+        //Add new user to the database
         public ActionResult AddDetail()
         {
             return View();

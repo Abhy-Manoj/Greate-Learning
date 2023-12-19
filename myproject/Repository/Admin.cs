@@ -7,13 +7,14 @@ using myproject.Models;
 
 public class AdminDataAccess
 {
-    private readonly string _connectionString = "Data Source=SYSLP1468;Initial Catalog=MyProjectDatabase;Integrated Security=True";
+    private readonly string _connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
     public AdminDataAccess(string connectionString)
     {
         _connectionString = connectionString;
     }
 
+    //Get admin details by id
     public Admin GetAdminById(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -43,6 +44,7 @@ public class AdminDataAccess
         return null;
     }
 
+    //Get admin details
     public List<Admin> GetAllAdmins()
     {
         List<Admin> admins = new List<Admin>();
@@ -51,8 +53,9 @@ public class AdminDataAccess
         {
             connection.Open();
 
-            using (SqlCommand command = new SqlCommand("SELECT * FROM Login", connection))
+            using (SqlCommand command = new SqlCommand("SP_Login", connection))
             {
+                command.CommandType = CommandType.StoredProcedure;
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -72,6 +75,7 @@ public class AdminDataAccess
         return admins;
     }
 
+    //Add new admin
     public void InsertAdmin(Admin admin)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -90,6 +94,7 @@ public class AdminDataAccess
         }
     }
 
+    //Update admin details
     public void UpdateAdmin(Admin admin)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -108,6 +113,7 @@ public class AdminDataAccess
         }
     }
 
+    //Update the password of the admin
     public void UpdateAdminPass(Admin admin)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -125,6 +131,40 @@ public class AdminDataAccess
         }
     }
 
+    //View enrollment requests
+    public List<PendingEnrollmentRequest> GetPendingEnrollmentRequests()
+    {
+        List<PendingEnrollmentRequest> pendingRequests = new List<PendingEnrollmentRequest>();
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
+
+            using (SqlCommand command = new SqlCommand("SP_GetEnrollmentRequests", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        pendingRequests.Add(new PendingEnrollmentRequest
+                        {
+                            RequestId = (int)reader["RequestId"],
+                            CourseId = (int)reader["CourseId"],
+                            Username = reader["Username"].ToString(),
+                            CourseName = reader["CourseName"].ToString(),
+                            Status = reader["Status"].ToString()
+                        });
+                    }
+                }
+            }
+        }
+
+        return pendingRequests;
+    }
+
+    //Delete the admin
     public void DeleteAdmin(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))

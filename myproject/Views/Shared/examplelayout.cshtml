@@ -34,28 +34,29 @@
         <ul class="sidebar-menu">
 
             <li>
-
                 <a href="@Url.Action("Homepage", "Admin")">&nbsp;<i class="fa fa-home"></i> Dashboard</a>
             </li>
             <li>
-                <a href="@Url.Action("CreateCourse", "Course")">&nbsp;<i class="fa fa-edit"></i> Add Course</a>
+                <a href="@Url.Action("CreateCourse", "Course")">&nbsp;<i class="fa fa-edit"></i> Add course</a>
             </li>
             <li>
-                <a href="@Url.Action("Courses", "Admin")">&nbsp;<i class="fa fa-book"></i> View Courses</a>
+                <a href="@Url.Action("Courses", "Admin")">&nbsp;<i class="fa fa-book"></i> View courses</a>
             </li>
             <li>
-                <a href="@Url.Action("Userdetails", "Admin")">&nbsp;<i class="fa fa-users"></i> View Users</a>
+                <a href="@Url.Action("Userdetails", "Admin")">&nbsp;<i class="fa fa-users"></i> View users</a>
             </li>
-            <li class="active">
-                <a href="@Url.Action("CreateAdmin", "Newadmin")">&nbsp;<i class="fa fa-user-plus"></i> Add Admin</a>
+            <li>
+                <a href="@Url.Action("ViewPendingEnrollmentRequests", "Admin")">&nbsp;<i class="fa fa-window-close"></i> View requests</a>
+            </li>
+            <li>
+                <a href="@Url.Action("CreateAdmin", "Newadmin")">&nbsp;<i class="fa fa-user-plus"></i> Add admin</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Admindetails", "Admin")">&nbsp;<i class="fa fa-user"></i> View admins</a>
             </li>
             <li>
 
-                <a href="@Url.Action("Admindetails", "Admin")">&nbsp;<i class="fa fa-user"></i> View Admins</a>
-            </li>
-            <li>
-
-                <a href="@Url.Action("AdminPassword", "Admin")">&nbsp;<i class="fa fa-lock"></i> Change Password</a>
+                <a href="@Url.Action("AdminPassword", "Admin")">&nbsp;<i class="fa fa-lock"></i> Change password</a>
             </li>
         </ul>
     </div>

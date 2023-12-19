@@ -49,16 +49,28 @@
       <HintPath>..\packages\BCrypt.Net.0.1.0\lib\net35\BCrypt.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -103,9 +115,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -144,6 +153,7 @@
     <Compile Include="Models\AssignedProjects.cs" />
     <Compile Include="Models\Courses.cs" />
     <Compile Include="Models\CreateTaskModel.cs" />
+    <Compile Include="Models\PendingEnrollmentRequest.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\NewEmployeeClass.cs" />
     <Compile Include="Models\Quiz.cs" />
@@ -193,14 +203,17 @@
     <Content Include="CSS\RegEmp.css" />
     <Content Include="CSS\Registration_validation_Style.css" />
     <Content Include="CSS\Adminlayout.css" />
+    <Content Include="CSS\Request.css" />
     <Content Include="CSS\Userhome.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="javascript\addadmin.js" />
     <Content Include="javascript\Adminvalid.js" />
     <Content Include="javascript\course.js" />
     <Content Include="javascript\login-validation.js" />
     <Content Include="javascript\Registration_validation.js" />
+    <Content Include="javascript\UserJS.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -248,7 +261,7 @@
     <Content Include="Views\User\Userhome.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Shared\_form.cshtml" />
-    <Content Include="Views\User\ViewTasks.cshtml" />
+    <Content Include="Views\User\ViewCourse.cshtml" />
     <Content Include="Views\Shared\_UserHomepage.cshtml" />
     <Content Include="Views\NewEmployee\Create.cshtml" />
     <Content Include="Views\Admin\Selected courses.cshtml" />
@@ -266,6 +279,11 @@
     <Content Include="Views\SCourse\CourseDetails.cshtml" />
     <Content Include="Views\User\ViewUserProfile.cshtml" />
     <Content Include="Views\Admin\AdminPassword.cshtml" />
+    <Content Include="Views\Quiz\GetQuiz.cshtml" />
+    <Content Include="Views\Quiz\TakeQuiz.cshtml" />
+    <Content Include="Views\User\UserPassword.cshtml" />
+    <Content Include="Views\Admin\ViewPendingEnrollmentRequests.cshtml" />
+    <Content Include="Views\Quiz\QuizResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

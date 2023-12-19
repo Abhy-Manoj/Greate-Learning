@@ -140,8 +140,10 @@ function validateDateOfBirth() {
     if (dateOfBirth > currentDate || dateOfBirth > eighteenYearsAgo) {
         setErrorFor(document.getElementById("DateOfBirth"), "Please enter a valid date of birth. You must be at least 18 years old.");
         return false;
+    } else {
+        setSuccessFor(document.getElementById("DateOfBirth"));
+        return true;
     }
-    return true;
 }
 
 

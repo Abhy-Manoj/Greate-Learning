@@ -1,0 +1,54 @@
+﻿@model IEnumerable<myproject.Models.Quiz>
+
+@{
+    ViewBag.Title = "Take Quiz";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+
+<h2>Take quiz</h2>
+<hr />
+
+@if (Model.Any())
+{
+    <form method="post" action="@Url.Action("SubmitQuiz", "Quiz")">
+        @Html.AntiForgeryToken()
+
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var currentQuiz = Model.ElementAt(i); // Access the current quiz using ElementAt
+
+            <div class="quiz-question">
+                @Html.Hidden("quizId", currentQuiz.QuizId)
+                <h4>@currentQuiz.Question</h4>
+                <label>
+                    <input type="radio" name="answer[@i]" value="1" />
+                    @currentQuiz.Option1
+                </label>
+                <br />
+                <label>
+                    <input type="radio" name="answer[@i]" value="2" />
+                    @currentQuiz.Option2
+                </label>
+                <br />
+                <label>
+                    <input type="radio" name="answer[@i]" value="3" />
+                    @currentQuiz.Option3
+                </label>
+                <br />
+                <label>
+                    <input type="radio" name="answer[@i]" value="4" />
+                    @currentQuiz.Option4
+                </label>
+                <hr />
+            </div>
+        }
+
+        <input type="submit" value="Submit Quiz" class="btn btn-primary" />
+    </form>
+}
+else
+{
+    <p>No quiz questions available for this course.</p>
+}
+
+<a href="@Url.Action("UserCourses", "SCourse")">Back to Your Courses</a>

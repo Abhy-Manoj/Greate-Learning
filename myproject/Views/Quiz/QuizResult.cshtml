@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Quiz Result";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+
+<h2>Quiz result</h2>
+<hr />
+
+<p>Your quiz score: @ViewBag.Score</p>
+<br />
+@Html.ActionLink("Back to Your Courses", "UserCourses", "SCourse")

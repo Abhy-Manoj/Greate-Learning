@@ -1,0 +1,76 @@
+﻿@model IEnumerable<myproject.Models.PendingEnrollmentRequest>
+
+@{
+    ViewBag.Title = "Pending Enrollment Requests";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+
+<h2>Pending enrollment requests</h2>
+<hr />
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Request ID")
+        </th>
+        <th>
+            @Html.DisplayName("Username")
+        </th>
+        <th>
+            @Html.DisplayName("Course name")
+        </th>
+        <th>
+            @Html.DisplayName("Status")
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+
+    @foreach (var request in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => request.RequestId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => request.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => request.CourseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => request.Status)
+            </td>
+            <td>
+                @Html.Hidden("CourseId", request.CourseId)
+                @if (request.Status == "Pending")
+                {
+                    <button class="btn btn-primary myBtn approve-button" data-requestid="@request.RequestId" data-courseid="@request.CourseId">Approve</button>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('.approve-button').click(function () {
+            var requestId = $(this).data('requestid');
+            var courseId = $(this).data('courseid');
+
+            $.ajax({
+                url: '@Url.Action("ApproveEnrollmentRequest", "Admin")',
+                type: 'POST',
+                data: { requestId: requestId, courseId: courseId },
+                success: function () {
+                    alert('Enrollment request approved successfully!');
+                },
+                error: function () {
+                    alert('Enrollment request approved successfully!');
+                    location.reload();  
+                }
+            });
+        });
+    });
+</script>

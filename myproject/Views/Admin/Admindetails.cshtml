@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/examplelayout.cshtml";
 }
 
-<h2>Registered Admins</h2>
+<h2>Registered admins</h2>
 <link href="~/CSS/RegEmp.css" rel="stylesheet" />
 <div>
     <hr />
@@ -16,12 +16,12 @@
                 @Html.DisplayNameFor(model => model.Username)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayName("E-mail")
             </th>
-
             <th>
                 Action
             </th>
+            <th></th>
         </tr>
 
         @foreach (var item in Model)
@@ -39,7 +39,6 @@
                 <td>
                     <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-danger myBttn">Delete</button>
                 </td>
-
             </tr>
         }
 
@@ -50,20 +49,19 @@
             <span class="close">&times;</span>
             <form>
                 <div class="container">
-                    <center>  <h4>Update Admin Details</h4> </center>
+                    <center>  <h4>Update admin details</h4> </center>
                     <hr>
                     <label> Username </label>
-                    <input type="text" id="usrnme" name="firstname" placeholder="Username" size="15" required />
+                    <input type="text" id="usrnme" name="firstname" placeholder="Username" size="15" class="validate" required />
+                    <span class="validation-message" id="usrnme-message"></span>
                     <label> Email ID: </label>
-                    <input type="text" id="eml" name="middlename" placeholder="Email" size="15" required />
-
+                    <input type="text" id="eml" name="middlename" placeholder="Email" size="15" class="validate" required />
+                    <span class="validation-message" id="eml-message"></span>
 
                     <button type="button" id="updtsbmt" class="btn btn-primary">Update</button>
                 </div>
             </form>
         </div>
-
-
     </div>
 </div>
 <script>
@@ -71,15 +69,79 @@
     var span = document.getElementsByClassName("close")[0];
     var idsecrt = "";
 
+    //Function to validate email
     function isValidEmail(email) {
         var emailPattern = /^[\w]+@@[\w]+?\.[a-zA-Z]{2,3}$/;
         return emailPattern.test(email);
     }
 
+    // Function to allow only letters
+    function containsOnlyLetters(value) {
+        var lettersRegex = /^[A-Za-z]+$/;
+        return lettersRegex.test(value);
+    }
+
+    // Use the "onfocusout" event for input fields with the "validate" class
+    $('.validate').on('focusout', function () {
+        validateField($(this));
+    });
+
+    // Function to validate a specific field
+    function validateField(field) {
+        var value = field.val();
+        var messageId = field.attr('id') + "-message";
+        var messageElement = $("#" + messageId);
+
+        // Clear previous validation message
+        messageElement.text("");
+
+        if (field.attr('id') === 'usrnme') {
+            if (value.trim() === "") {
+                messageElement.text("Username is required.");
+                return false;
+            } else if (!containsOnlyLetters(value)) {
+                messageElement.text("Username should contain only letters.");
+                return false;
+            }
+        } else if (field.attr('id') === 'eml') {
+            if (!isValidEmail(value)) {
+                messageElement.text("Please enter a valid email address.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    $('#updtsbmt').click(function (obj) {
+        var usr = $('#usrnme').val();
+        var eml = $('#eml').val();
+
+        // Validate each field before submitting the form
+        if (validateField($('#usrnme')) && validateField($('#eml'))) {
+            var param = JSON.stringify({
+                Id: idsecrt,
+                Username: usr,
+                Email: eml,
+            });
+            modal.style.display = "block";
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Edit", "Newadmin")',
+                contentType: 'application/json; charset=utf-8',
+                data: param,
+                dataType: 'json',
+                success: function (data) {
+                    window.location.href = window.location.href;
+                }
+            });
+            idsecrt = "";
+        }
+    });
+
     $('.myBtn').click(function (obj) {
         $('#usrnme').val("");
         $('#eml').val("");
-        $('#pswd').val("");
         var param = obj.target.value;
         idsecrt = param;
         modal.style.display = "block";
@@ -97,64 +159,32 @@
         });
     });
 
-    $('#updtsbmt').click(function (obj) {
-        var usr = document.getElementById("usrnme").value;
-        var eml = document.getElementById("eml").value;
-
-        if (usr.trim() === "") {
-            alert("Username is required.");
-            return;
+    $('.myBttn').click(function (obj) {
+        var param = obj.target.value;
+        if (confirm("Are you sure you want to delete this admin?")) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DeleteConfirmed", "Newadmin")',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ id: param }),
+                dataType: 'json',
+                success: function (data) {
+                    window.location.href = window.location.href;
+                },
+                error: function () {
+                    alert("An error occurred while deleting the admin.");
+                }
+            });
         }
-        if (!isValidEmail(eml)) {
-            alert("Please enter a valid email address.");
-            return;
-        }
-
-        var param = JSON.stringify({
-            Id: idsecrt,
-            Username: usr,
-            Email: eml,
-        });
-        modal.style.display = "block";
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("Edit", "Newadmin")',
-            contentType: 'application/json; charset=utf-8',
-            data: param,
-            dataType: 'json',
-            success: function (data) {
-                window.location.href = window.location.href;
-            }
-        });
-        idsecrt = ""
     });
 
-    $('.myBttn').click(function (obj) {
-    var param = obj.target.value;
-    if (confirm("Are you sure you want to delete this admin?")) {
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("DeleteConfirmed", "Newadmin")',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({ id: param }),
-            dataType: 'json',
-            success: function (data) {
-                window.location.href = window.location.href;
-            },
-            error: function () {
-                alert("An error occurred while deleting the admin.");
-            }
-        });
+    span.onclick = function () {
+        modal.style.display = "none";
     }
-});
 
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>

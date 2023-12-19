@@ -20,6 +20,7 @@ namespace myproject.Controllers
             return View();
         }
 
+        //View the particular user details
         public ActionResult ViewUserProfile(int userId)
         {
             ViewUsers user = new ViewUsers();
@@ -60,9 +61,12 @@ namespace myproject.Controllers
             return View("ViewUserProfile", user);
         }
 
-
-        public ActionResult ViewTasks()
+        //View the courses available for the user
+        public ActionResult ViewCourse()
         {
+            int currentUserId = (int)Session["UserId"];
+            int userId = currentUserId;
+
             List<Courses> tasks = new List<Courses>();
 
             string connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
@@ -71,33 +75,79 @@ namespace myproject.Controllers
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT Id, CourseName, Description, Duration, ImageUrl FROM Courses";
+                string storedProcedureName = "SP_UserCourse";
 
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@UserName", currentUser);
-
-                connection.Open();
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
                 {
-                    Courses courses = new Courses();
-                    courses.Id = Convert.ToInt32(reader["Id"]);
-                    courses.CourseName = reader["CourseName"].ToString();
-                    courses.Description = reader["Description"].ToString();
-                    courses.Duration = reader["Duration"].ToString();
-                    courses.ImageUrl = reader["ImageUrl"].ToString();
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@UserName", currentUser);
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    connection.Open();
 
-                    tasks.Add(courses);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Courses courses = new Courses();
+                            courses.Id = Convert.ToInt32(reader["Id"]);
+                            courses.CourseName = reader["CourseName"].ToString();
+                            courses.Description = reader["Description"].ToString();
+                            courses.Duration = reader["Duration"].ToString();
+                            courses.ImageUrl = reader["ImageUrl"].ToString();
+                            courses.Count = Convert.ToInt32(reader["Count"]);
+
+                            tasks.Add(courses);
+                        }
+                    }
                 }
-
-                reader.Close();
             }
 
             return View(tasks);
         }
-                     
+
+        //Change the user password
+        public ActionResult UserPassword()
+        {
+            List<ViewUsers> user = new List<ViewUsers>();
+
+            string connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string storedProcedureName = "SP_Signup";
+
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                {
+
+                    connection.Open();
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        ViewUsers User = new ViewUsers();
+                        User.Email = reader["Email"].ToString();
+                        User.Username = reader["Username"].ToString();
+                        User.FirstName = reader["FirstName"].ToString();
+                        User.LastName = reader["LastName"].ToString();
+                        User.DateOfBirth = reader["DateOfBirth"].ToString();
+                        User.Gender = reader["Gender"].ToString();
+                        User.Phone = reader["Phone"].ToString();
+                        User.DateOfBirth = reader["DateOfBirth"].ToString();
+                        User.State = reader["State"].ToString();
+                        User.City = reader["City"].ToString();
+                        User.Password = reader["Password"].ToString();
+                        User.ConfirmPassword = reader["ConfirmPassword"].ToString();
+                        User.Id = Convert.ToInt32(reader["Id"]);
+                    }
+
+                    reader.Close();
+                }
+            }
+
+            return View(user);
+        }
+
     }
 
 }

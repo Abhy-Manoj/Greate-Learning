@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="~/CSS/Course.css" rel="stylesheet" />
 
-<h2>Courses Available</h2>
+<h2>Courses available</h2>
 
 <div>
     <hr />
@@ -18,14 +18,19 @@
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayName("Description")
             </th>
 
             <th>
-                @Html.DisplayName("Duration (In Days)")
+                @Html.DisplayName("Duration")
+            </th>
+            <th>
+                @Html.DisplayName("Count")
             </th>
             <th>
                 Image
+            </th>
+            <th>
             </th>
             <th>
             </th>
@@ -48,13 +53,19 @@
                     @Html.DisplayFor(modelItem => item.Duration)
                 </td>
                 <td>
-                    <img src="@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    <img src="data:image;base64,@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
                 </td>
                 <td>
                     <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-primary myBtn">Update</button>
                 </td>
                 <td>
                     <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-success myBtnn">Add Quiz</button>
+                </td>
+                <td>
+                    <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-secondary myBttnn">View Quiz</button>
                 </td>
                 <td>
                     <button value=@Html.DisplayFor(modelItem => item.Id) class="btn btn-danger myBttn">Delete</button>
@@ -75,9 +86,9 @@
                     <input type="text" id="desc" name="middlename" placeholder="Description" size="15" required />
                     <label> Duration: </label>
                     <input type="text" id="durtn" name="lastname" placeholder="Duration" size="15" required /><br /><br />
+                    <label> Count: </label>
+                    <input type="text" id="cnt" name="count" placeholder="Count" size="15" required /><br /><br />
 
-                    <label> Current Image: </label>
-                    <span id="currentImage"></span>
                     <label> New Image: </label>
                     <input type="file" id="ImageFile" name="ImageFile" accept="image/*" /><br />
 
@@ -102,6 +113,7 @@ $('.myBtn').click(function (obj) {
     $('#crsnm').val("");
     $('#desc').val("");
     $('#durtn').val("");
+    $('#cnt').val("");
     $('#ImageFile').val("");
     $('#VideoFile').val("");
     var param = obj.target.value;
@@ -117,6 +129,7 @@ $('.myBtn').click(function (obj) {
             $('#crsnm').val(data.CourseName);
             $('#desc').val(data.Description);
             $('#durtn').val(data.Duration);
+            $('#cnt').val(data.Count);
             $('#currentImage').text(data.ImageUrl);
             $('#currentVideo').text(data.VideoUrl);
         }
@@ -127,6 +140,7 @@ $('#updtsbmt').click(function (obj) {
     var crs = document.getElementById("crsnm").value;
     var des = document.getElementById("desc").value;
     var dur = document.getElementById("durtn").value;
+    var cnt = document.getElementById("cnt").value;
     var imgFile = document.getElementById("ImageFile").files[0];
     var vidFile = document.getElementById("VideoFile").files[0];
 
@@ -142,12 +156,17 @@ $('#updtsbmt').click(function (obj) {
         alert("Course Duration is required.");
         return;
     }
+    if (cnt.trim() === "") {
+        alert("Course Count is required.");
+        return;
+    }
 
     var formData = new FormData();
     formData.append("Id", idsecrt);
     formData.append("CourseName", crs);
     formData.append("Description", des);
     formData.append("Duration", dur);
+    formData.append("Count", cnt);
 
     if (imgFile) {
         formData.append("ImageFile", imgFile);
@@ -174,6 +193,11 @@ $('.myBtnn').click(function (obj) {
     var param = obj.target.value;
     window.location.href = '@Url.Action("AddQuiz", "Quiz")' + '?courseId=' + param;
 });
+
+    $('.myBttnn').click(function (obj) {
+    var param = obj.target.value;
+    window.location.href = '@Url.Action("GetQuiz", "Quiz")' + '?courseId=' + param;
+    });
 
     $('.myBttn').click(function (obj) {
     var param = obj.target.value;

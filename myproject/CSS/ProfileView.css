@@ -28,3 +28,7 @@ dd {
     font-size: 18px;
     color: #333;
 }
+
+.input-error, .error-message {
+    color: red;
+}

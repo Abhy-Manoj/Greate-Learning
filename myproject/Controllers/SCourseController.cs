@@ -10,6 +10,7 @@ public class SCourseController : Controller
 {
     private readonly string _connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
+    //Get the details of courses selected by the user
     public ActionResult UserCourses()
     {
         string currentUsername = (string)Session["Username"];
@@ -19,8 +20,10 @@ public class SCourseController : Controller
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             connection.Open();
-            using (SqlCommand getUserIdCmd = new SqlCommand("SELECT Id FROM Signup WHERE Username = @Username", connection))
+            using (SqlCommand getUserIdCmd = new SqlCommand("SP_SignupUser", connection))
+
             {
+                getUserIdCmd.CommandType = CommandType.StoredProcedure;
                 getUserIdCmd.Parameters.AddWithValue("@Username", currentUsername);
                 var userIdObj = getUserIdCmd.ExecuteScalar();
                 if (userIdObj != null)
@@ -60,7 +63,7 @@ public class SCourseController : Controller
         return RedirectToAction("ErrorPage");
     }
 
-
+    //Unjoin the course
     public ActionResult UnjoinCourse(int courseId)
     {
         string currentUsername = (string)Session["Username"];
@@ -70,8 +73,9 @@ public class SCourseController : Controller
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             connection.Open();
-            using (SqlCommand getUserIdCmd = new SqlCommand("SELECT Id FROM Signup WHERE Username = @Username", connection))
+            using (SqlCommand getUserIdCmd = new SqlCommand("SP_SignupUser", connection))
             {
+                getUserIdCmd.CommandType = CommandType.StoredProcedure;
                 getUserIdCmd.Parameters.AddWithValue("@Username", currentUsername);
                 var userIdObj = getUserIdCmd.ExecuteScalar();
                 if (userIdObj != null)
@@ -88,10 +92,23 @@ public class SCourseController : Controller
                 }
             }
         }
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
+            //Increase the course count by 1 when unjoining a course
+            using (SqlCommand cmd = new SqlCommand("SP_ChangeEnrollmentCount", connection))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CourseId", courseId);
+                cmd.Parameters.AddWithValue("@ChangeAmount", 1); // Increment by 1 when unjoining
+                cmd.ExecuteNonQuery();
+            }
+        }
 
         return RedirectToAction("UserCourses");
     }
 
+    //Get the details of course by id
     public Courses GetCourseDetails(int courseId)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -114,7 +131,7 @@ public class SCourseController : Controller
                         course.Duration = reader["Duration"].ToString();
                         course.ImageUrl = reader["ImageUrl"].ToString();
                         course.VideoUrl = reader["VideoUrl"].ToString();
-
+                        course.Count = (int)reader["Count"];
                         return course;
                     }
                 }

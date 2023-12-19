@@ -25,22 +25,24 @@
             <img src="~/Content/project-management.png" alt="Logo" />
             <h4 style="color: white; margin: 0;">Great Learning</h4>
         </div><br />
-        <ul class="sidebar-menu">
-            
-            <li>
-                <a href="@Url.Action("Userhome", "User")">&nbsp;<i class="fa fa-home"></i> Dashboard</a>
-            </li>
-            <li class="active">
-                <a href="@Url.Action("ViewTasks", "User")">&nbsp;<i class="fa fa-book"></i> Available Courses</a>
-            </li>
+              <ul class="sidebar-menu">
 
-            <li>
-                <a href="@Url.Action("UserCourses", "SCourse")">&nbsp;<i class="fa fa-newspaper-o"></i> Selected Courses</a>
-            </li>
-            <li>
-                <a href="@Url.Action("ViewUserProfile", "User", new { userId = Session["UserId"]})">&nbsp;<i class="fa fa-user-plus"></i> Edit Profile</a>
-            </li>
-        </ul>
+                  <li>
+                      <a href="@Url.Action("Userhome", "User")">&nbsp;<i class="fa fa-home"></i> Dashboard</a>
+                  </li>
+                  <li class="active">
+                      <a href="@Url.Action("ViewCourse", "User")">&nbsp;<i class="fa fa-book"></i> Available courses</a>
+                  </li>
+                  <li>
+                      <a href="@Url.Action("UserCourses", "SCourse")">&nbsp;<i class="fa fa-newspaper-o"></i> Selected courses</a>
+                  </li>
+                  <li>
+                      <a href="@Url.Action("ViewUserProfile", "User", new { userId = Session["UserId"]})">&nbsp;<i class="fa fa-user-plus"></i> Edit profile</a>
+                  </li>
+                  <li>
+                      <a href="@Url.Action("UserPassword", "User")">&nbsp;<i class="fa fa-lock"></i> Change password</a>
+                  </li>
+              </ul>
     </div>
 
 

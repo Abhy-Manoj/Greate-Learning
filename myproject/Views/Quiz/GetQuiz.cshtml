@@ -1,0 +1,65 @@
+﻿@model List<myproject.Models.Quiz>
+
+@{
+    ViewBag.Title = "Quiz Questions";
+    Layout = "~/Views/Shared/examplelayout.cshtml";
+}
+
+<h2>Quiz questions</h2>
+<hr />
+
+@if (Model.Count == 0)
+{
+    <p>No quiz added!</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>Quiz ID</th>
+            <th>Question</th>
+            <th>Option 1</th>
+            <th>Option 2</th>
+            <th>Option 3</th>
+            <th>Option 4</th>
+            <th>Correct Option</th>
+        </tr>
+        @foreach (var quiz in Model)
+        {
+            <tr>
+                <td>@quiz.QuizId</td>
+                <td>@quiz.Question</td>
+                <td>@quiz.Option1</td>
+                <td>@quiz.Option2</td>
+                <td>@quiz.Option3</td>
+                <td>@quiz.Option4</td>
+                <td>@quiz.C_Option</td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteQuiz(@quiz.QuizId)">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<a href="@Url.Action("Courses", "Admin")">Go Back</a>
+
+<script>
+    function deleteQuiz(quizId) {
+    console.log('Quiz ID:', quizId);
+    if (confirm("Are you sure you want to delete this quiz?")) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeleteQuiz", "Quiz")',
+            data: { id: quizId },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert("Quiz deleted successfully");
+                location.reload();
+            }
+        });
+    }
+}
+</script>

@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_UserHomepage.cshtml";
 }
 
-<h2>Your Courses</h2>
+<h2>Your courses</h2>
 
 <hr />
 
@@ -50,7 +50,7 @@
                         @Html.DisplayFor(modelItem => item.Duration)
                     </td>
                     <td>
-                        <img src="@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
+                        <img src="data:image/png;base64,@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
                     </td>
                     <td>
                         <button value=@Html.DisplayFor(modelItem => item.CourseId) class="btn btn-primary myBttn">Learn</button>
@@ -70,7 +70,7 @@
 else
 {
 <div>
-    <p>No courses are selected! Select a course <a href="@Url.Action("ViewTasks", "User")">here</a></p>
+    <p>No courses are selected! Select a course <a href="@Url.Action("ViewCourse", "User")">here</a></p>
 </div>
 }
 

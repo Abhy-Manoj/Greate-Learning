@@ -14,6 +14,7 @@ public class User
         _connectionString = connectionString;
     }
 
+    //View the users
     public ViewUsers GetUserById(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -50,6 +51,7 @@ public class User
         return null;
     }
 
+    //All the users in the database
     public List<ViewUsers> GetAllUsers()
     {
         List<ViewUsers> users = new List<ViewUsers>();
@@ -86,6 +88,7 @@ public class User
         return users;
     }
 
+    //Add user
     public void InsertUser(ViewUsers user)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -108,6 +111,7 @@ public class User
         }
     }
 
+    //update the user details
     public void UpdateUser(ViewUsers user)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -123,15 +127,32 @@ public class User
                 command.Parameters.AddWithValue("@Email", user.Email);
                 command.Parameters.AddWithValue("@Username", user.Username);
                 command.Parameters.AddWithValue("@Phone", user.Phone);
-                command.Parameters.AddWithValue("@Gender", user.Gender);
-                command.Parameters.AddWithValue("@State", user.State);
-                command.Parameters.AddWithValue("@City", user.City);
-                command.Parameters.AddWithValue("@DateOfBirth", user.DateOfBirth);
                 command.ExecuteNonQuery();
             }
         }
     }
 
+    //Update the password
+    public void UpdateUserPass(ViewUsers user)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
+
+            using (SqlCommand command = new SqlCommand("SPU_UserPassword", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                command.Parameters.AddWithValue("@Password", hashedPassword);
+                command.Parameters.AddWithValue("@ConfirmPassword", user.ConfirmPassword);
+                command.Parameters.AddWithValue("@Id", user.Id);
+
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+
+    //Delete user
     public void DeleteUser(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))

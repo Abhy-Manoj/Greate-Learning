@@ -3,11 +3,13 @@ using System.Configuration;
 using System.Web.Mvc;
 using System.IO;
 using System.Web;
+using System;
 
 public class CourseController : Controller
 {
     private readonly string _connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
+    // Get the course details
     public ActionResult Index()
     {
         var dataAccess = new CourseDataAccess(_connectionString);
@@ -23,6 +25,7 @@ public class CourseController : Controller
         return Json(course, JsonRequestBehavior.DenyGet);
     }
 
+    // Create new Course
     public ActionResult CreateCourse()
     {
         return View();
@@ -31,20 +34,20 @@ public class CourseController : Controller
     [HttpPost]
     public ActionResult Create(Courses course)
     {
+        // Adding the image file to a specific folder and converting to base64
         if (course.ImageFile != null && course.ImageFile.ContentLength > 0)
         {
-            string fileName = Path.GetFileName(course.ImageFile.FileName);
-            string filePath = Path.Combine(Server.MapPath("~/Images"), fileName);
-            course.ImageFile.SaveAs(filePath);
-            course.ImageUrl = "/Images/" + fileName;
+            string base64Image = ConvertFileToBase64(course.ImageFile);
+            course.ImageUrl = base64Image;
         }
-
+        //adding the video file to a specific folder
         if (course.VideoFile != null && course.VideoFile.ContentLength > 0)
         {
             string videoFileName = Path.GetFileName(course.VideoFile.FileName);
             string videoFilePath = Path.Combine(Server.MapPath("~/Videos"), videoFileName);
             course.VideoFile.SaveAs(videoFilePath);
             course.VideoUrl = "/Videos/" + videoFileName;
+
         }
 
         course.Count = course.Count;
@@ -53,6 +56,7 @@ public class CourseController : Controller
         return RedirectToAction("Courses", "Admin");
     }
 
+    // Edit the Course
     public ActionResult Edit(int id)
     {
         var dataAccess = new CourseDataAccess(_connectionString);
@@ -66,33 +70,34 @@ public class CourseController : Controller
         var dataAccess = new CourseDataAccess(_connectionString);
         var course = dataAccess.GetCourseById(id);
 
-        // Check image file
+        // Check image file and convert to base64
         if (ImageFile != null && ImageFile.ContentLength > 0)
         {
-            string fileName = Path.GetFileName(ImageFile.FileName);
-            string filePath = Path.Combine(Server.MapPath("~/Images"), fileName);
-            ImageFile.SaveAs(filePath);
-            course.ImageUrl = "/Images/" + fileName;
+            string base64Image = ConvertFileToBase64(ImageFile);
+            course.ImageUrl = base64Image;
         }
 
-        // Check video file
+        // Edit video file
         if (VideoFile != null && VideoFile.ContentLength > 0)
         {
             string videoFileName = Path.GetFileName(VideoFile.FileName);
             string videoFilePath = Path.Combine(Server.MapPath("~/Videos"), videoFileName);
             VideoFile.SaveAs(videoFilePath);
             course.VideoUrl = "/Videos/" + videoFileName;
+
         }
 
         course.CourseName = editedCourse.CourseName;
         course.Description = editedCourse.Description;
         course.Duration = editedCourse.Duration;
+        course.Count = editedCourse.Count;
 
         dataAccess.UpdateCourse(course);
 
         return Json(course, JsonRequestBehavior.DenyGet);
     }
 
+    // Delete course
     public ActionResult Delete(int id)
     {
         var dataAccess = new CourseDataAccess(_connectionString);
@@ -106,5 +111,20 @@ public class CourseController : Controller
         var dataAccess = new CourseDataAccess(_connectionString);
         dataAccess.DeleteCourse(id);
         return Json("Success", JsonRequestBehavior.DenyGet);
+    }
+
+    // Helper method to convert file to base64
+    private string ConvertFileToBase64(HttpPostedFileBase file)
+    {
+        using (Stream inputStream = file.InputStream)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                inputStream.CopyTo(memoryStream);
+                byte[] fileBytes = memoryStream.ToArray();
+                string base64 = Convert.ToBase64String(fileBytes);
+                return base64;
+            }
+        }
     }
 }

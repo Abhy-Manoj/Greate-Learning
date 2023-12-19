@@ -18,6 +18,7 @@ namespace myproject.Repository
             sqlconnect = new SqlConnection(connectionString);
         }
 
+        //Add the new user details to database
         public (bool, string) AddDetails(Registration registration)
         {
             Connection();
@@ -75,23 +76,18 @@ namespace myproject.Repository
                 int rowsAffected = command.ExecuteNonQuery();
                 return (rowsAffected > 0, null);
             }
-            catch (Exception ex)
-            {
-                // Handle any exception that occurred during the database operation
-                // Logging, error handling, etc.
-                return (false, "An error occurred while adding user details: " + ex.Message);
-            }
             finally
             {
                 sqlconnect.Close();
             }
         }
 
-
+        //get the username
         public List<string> GetAllUsernames()
         {
             Connection();
-            SqlCommand command = new SqlCommand("SELECT Username FROM Signup", sqlconnect);
+            SqlCommand command = new SqlCommand("SP_Signup", sqlconnect);
+            command.CommandType = CommandType.StoredProcedure;
 
             List<string> usernames = new List<string>();
 
@@ -107,13 +103,6 @@ namespace myproject.Repository
                 }
 
                 reader.Close();
-            }
-            catch (Exception ex)
-            {
-                // Handle any exception that occurred during the database operation
-                // Logging, error handling, etc.
-                Console.WriteLine("Error: " + ex.Message);
-                return null;
             }
             finally
             {

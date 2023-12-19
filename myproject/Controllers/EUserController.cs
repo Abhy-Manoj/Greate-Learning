@@ -7,6 +7,7 @@ public class EUserController : Controller
 {
     private readonly string _connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
+    //View details of the user
     public ActionResult Index()
     {
         var dataAccess = new User(_connectionString);
@@ -34,6 +35,7 @@ public class EUserController : Controller
         return RedirectToAction("Index");
     }
 
+    //Edit the user details
     public ActionResult Edit(int id)
     {
         var dataAccess = new User(_connectionString);
@@ -49,6 +51,23 @@ public class EUserController : Controller
         return Json("Success", JsonRequestBehavior.DenyGet);
     }
 
+    //Edit the user password
+    public ActionResult EditPass(int id)
+    {
+        var dataAccess = new User(_connectionString);
+        var user = dataAccess.GetUserById(id);
+        return View(user);
+    }
+
+    [HttpPost]
+    public JsonResult EditPass(ViewUsers user)
+    {
+        var dataAccess = new User(_connectionString);
+        dataAccess.UpdateUserPass(user);
+        return Json("Success", JsonRequestBehavior.DenyGet);
+    }
+
+    //Delete the user details from database
     public ActionResult Delete(int id)
     {
         var dataAccess = new User(_connectionString);

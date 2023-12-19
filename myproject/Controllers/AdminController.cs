@@ -4,16 +4,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace myproject.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly AdminDataAccess adminDataAccess = new AdminDataAccess(ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString);
+
         public ActionResult Homepage()
         {
             string username = (string)Session["Username"];
@@ -22,7 +20,7 @@ namespace myproject.Controllers
 
         }
 
-
+        //Get the user details from database
         public ActionResult Userdetails()
         {
             List<ViewUsers> employees = new List<ViewUsers>();
@@ -30,10 +28,9 @@ namespace myproject.Controllers
             string connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "SELECT * FROM Signup";
-
-                SqlCommand command = new SqlCommand(query, connection);
+            {                
+                SqlCommand command = new SqlCommand("SP_Signup", connection);
+                command.CommandType = CommandType.StoredProcedure;
 
                 connection.Open();
 
@@ -60,6 +57,7 @@ namespace myproject.Controllers
             return View(employees);
         }
 
+        //Get the admin details from database
         public ActionResult Admindetails()
         {
             List<RegisteredEmployees> Registered = new List<RegisteredEmployees>();
@@ -67,11 +65,9 @@ namespace myproject.Controllers
             string connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "SELECT Username, Email, Password,Id FROM Login";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
+            {           
+                SqlCommand command = new SqlCommand("SP_Login", connection);
+                command.CommandType = CommandType.StoredProcedure;
                 connection.Open();
 
                 SqlDataReader reader = command.ExecuteReader();
@@ -93,6 +89,7 @@ namespace myproject.Controllers
             return View(Registered);
         }
 
+        //To change the admin password
         public ActionResult AdminPassword()
         {
             List<RegisteredEmployees> Registered = new List<RegisteredEmployees>();
@@ -101,9 +98,8 @@ namespace myproject.Controllers
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT Username, Email, Password,Id FROM Login";
-
-                SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new SqlCommand("SP_Login", connection);
+                command.CommandType = CommandType.StoredProcedure;
 
                 connection.Open();
 
@@ -126,6 +122,7 @@ namespace myproject.Controllers
             return View(Registered);
         }
 
+        //To delete the user
         public ActionResult DeleteUser(int id)
         {
             try
@@ -162,9 +159,7 @@ namespace myproject.Controllers
             }
         }
 
-
-
-
+        //View different courses available
         public ActionResult Courses()
         {
             List<Courses> viewcourse = new List<Courses>();
@@ -173,30 +168,74 @@ namespace myproject.Controllers
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT CourseName, Description, Duration,Id, ImageUrl, VideoUrl FROM Courses";
+                string storedProcedureName = "SP_Course";
 
-                SqlCommand command = new SqlCommand(query, connection);
-
-                connection.Open();
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
                 {
-                    Courses course = new Courses();
-                    course.CourseName = reader["CourseName"].ToString();
-                    course.Description = reader["Description"].ToString();
-                    course.Duration = reader["Duration"].ToString();
-                    course.ImageUrl = reader["ImageUrl"].ToString();
-                    course.VideoUrl = reader["VideoUrl"].ToString();
-                    course.Id = Convert.ToInt32(reader["Id"]);
-                    viewcourse.Add(course);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                            Courses course = new Courses();
+                            course.CourseName = reader["CourseName"].ToString();
+                            course.Description = reader["Description"].ToString();
+                            course.Duration = reader["Duration"].ToString();
+                            string base64Image = reader["ImageUrl"].ToString();
+                            // Convert base64 strings to bytes
+                            byte[] imageBytes = Convert.FromBase64String(base64Image);
+                            course.ImageUrl = Convert.ToBase64String(imageBytes);
+                            course.VideoUrl = reader["VideoUrl"].ToString();
+                            course.Count = Convert.ToInt32(reader["Count"]);
+                            course.Id = Convert.ToInt32(reader["Id"]);
+                            viewcourse.Add(course);
+                        }
+                        reader.Close();
+                    }
                 }
 
-                reader.Close();
             }
 
             return View(viewcourse);
+        }
+
+
+        //View enrollment requests
+        public ActionResult ViewPendingEnrollmentRequests()
+        {
+            List<PendingEnrollmentRequest> pendingRequests = adminDataAccess.GetPendingEnrollmentRequests();
+            return View(pendingRequests);
+        }
+
+        //Approve the enrollment requests
+        public ActionResult ApproveEnrollmentRequest(int requestId, int courseId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["GetConnection"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand approveRequestCmd = new SqlCommand("SP_ApproveEnrollmentRequest", connection))
+                {
+                    approveRequestCmd.CommandType = CommandType.StoredProcedure;
+                    approveRequestCmd.Parameters.AddWithValue("@RequestId", requestId);
+                    approveRequestCmd.ExecuteNonQuery();
+                }
+                //Decrease the course count
+                using (SqlCommand cmd = new SqlCommand("SP_ChangeEnrollmentCount", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CourseId", courseId);
+                    cmd.Parameters.AddWithValue("@ChangeAmount", -1); // Decrement by 1 when joining
+                    cmd.ExecuteNonQuery();
+                }
+                return RedirectToAction("EnrollmentRequests");
+            }
+
         }
 
     }

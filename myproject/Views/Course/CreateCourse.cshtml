@@ -17,21 +17,23 @@
     <div style="margin: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 300px;">
         @using (Html.BeginForm("Create", "Course", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <span>Course Name:</span> @Html.TextBoxFor(m => m.CourseName, new { placeholder = "Enter Course Name", required = "required" })<br />
-            @Html.ValidationMessageFor(m => m.CourseName)
+            <span>Course name:</span> @Html.TextBoxFor(m => m.CourseName, new { placeholder = "Enter course name", required = "required" })<br />
+            <div id="courseNameError" class="field-error"></div>
 
-            <span>Description: </span> @Html.TextBoxFor(m => m.Description, new { placeholder = "Enter Description", required = "required" })<br />
-            @Html.ValidationMessageFor(m => m.Description)
+            <span>Description: </span> @Html.TextBoxFor(m => m.Description, new { placeholder = "Enter description", required = "required" })<br />
+            <div id="descriptionError" class="field-error"></div>
 
-            <span>Duration: </span>@Html.TextBoxFor(m => m.Duration, new { placeholder = "Enter Duration", required = "required" })<br />
-            @Html.ValidationMessageFor(m => m.Duration)
+            <span>Duration: </span>@Html.TextBoxFor(m => m.Duration, new { placeholder = "Enter duration", required = "required" })<br />
+            <div id="durationError" class="field-error"></div>
 
-            <span>Enrollment Count:</span> @Html.TextBoxFor(m => m.Count, new { placeholder = "Enter Enrollment Count", required = "required" })<br />
-            @Html.ValidationMessageFor(m => m.Count)
+            <span>Enrollment count:</span> @Html.TextBoxFor(m => m.Count, new { placeholder = "Enter enrollment count", required = "required" })<br />
+            <div id="countError" class="field-error"></div>
 
-            <span>Upload Image: </span> <input type="file" name="ImageFile" required="required" accept="image/*" /><br />
+            <span>Upload image: </span> <input type="file" name="ImageFile" required="required" accept="image/*" /><br />
+            <div id="imageFileError" class="field-error"></div>
 
-            <span>Upload Video: </span> <input type="file" name="VideoFile" required="required" accept="video/*" /><br />
+            <span>Upload video: </span> <input type="file" name="VideoFile" required="required" accept="video/*" /><br />
+            <div id="videoFileError" class="field-error"></div>
 
             <input id="Submit" type="submit" value="Submit" />
         }

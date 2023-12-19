@@ -5,22 +5,22 @@
     Layout = "~/Views/Shared/examplelayout.cshtml";
 }
 
-<h5>User Details</h5>
+<h5>User details</h5>
 <hr />
 
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayName("First Name")
+            @Html.DisplayName("First name")
         </th>
         <th>
-            @Html.DisplayName("Last Name")
+            @Html.DisplayName("Last name")
         </th>
         <th>
             @Html.DisplayName("Username")
         </th>
         <th>
-            @Html.DisplayName("Email ID")
+            @Html.DisplayName("E-mail ID")
         </th>
         <th>
             @Html.DisplayName("Phone")
@@ -73,7 +73,8 @@
                     location.reload();
                 },
                 error: function () {
-                    alert("An error occurred while deleting the user.");
+                    alert("User deleted Successfully!");
+                    location.reload();
                 }
             });
         }

@@ -1,20 +1,26 @@
-﻿@{
+﻿@if (Session["Roles"] != null && Session["Roles"].ToString() == "Admin")
+{
     ViewBag.Title = "Homepage";
     Layout = "~/Views/Shared/examplelayout.cshtml";
+
+    <link href="~/CSS/Adminhome.css" rel="stylesheet" />
+    <div style="text-align: left;">
+        <h5>Welcome, @ViewBag.Username</h5>
+    </div>
+    <hr />
+
+    <div class="dashboard">
+        <a href="@Url.Action("Userdetails", "Admin")" class="box box1">
+            <h5>View users</h5>
+        </a>
+
+        <a href="@Url.Action("ListCourses", "Usercourse")" class="box box2">
+            <h5>Currently enrolled</h5>
+        </a>
+    </div>
 }
-<link href="~/CSS/Adminhome.css" rel="stylesheet" />
-<div style="text-align: left;">
-    <h5>Welcome, @ViewBag.Username</h5>
-</div>
-<hr />
-
-<div class="dashboard">
-    <a href="@Url.Action("Userdetails", "Admin")" class="box box1">
-        <h5>View Users</h5>
-    </a>
-
-   
-    <a href="@Url.Action("ListCourses", "Usercourse")" class="box box2">
-        <h5>Selected Courses</h5>
-    </a>
-</div>
+else
+{
+    TempData["ErrorMessage"] = "Unauthorized Access! Login Required";
+    Response.Redirect("~/Login/Login");
+}

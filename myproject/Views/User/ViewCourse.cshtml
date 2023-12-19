@@ -1,0 +1,81 @@
+﻿@model IEnumerable<myproject.Models.Courses>
+
+@{
+    ViewBag.Title = "Available Courses";
+    Layout = "~/Views/Shared/_UserHomepage.cshtml";
+}
+
+@{
+    string currentUser = (string)Session["Username"];
+}
+
+<h5>Available courses</h5>
+<hr />
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Course name")
+        </th>
+        <th>
+            @Html.DisplayName("Description")
+        </th>
+        <th>
+            @Html.DisplayName("Duration")
+        </th>
+        <th>
+            @Html.DisplayName("Available Count")
+        </th>
+        <th>
+            @Html.DisplayName("Image")
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                <img src="data:image/png;base64,@item.ImageUrl" alt="Course Image" style="max-width: 100px; max-height: 100px;" />
+            </td>
+            <td>
+                <button value="@Html.DisplayFor(modelItem => item.Id)" class="btn btn-primary myBtn join-button">Enroll</button>
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('.join-button').click(function () {
+            var courseId = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("JoinCourse", "Selected")',
+                type: 'POST',
+                data: { courseId: courseId },
+                success: function (data) {
+                    alert('Error joining the course. Please try again later.');
+                },
+                error: function () {
+                    alert('Request send successfully!');
+                    window.location.href = '@Url.Action("UserCourses", "SCourse")';
+                }
+            });
+        });
+    });
+</script>

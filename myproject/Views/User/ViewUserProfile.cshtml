@@ -4,7 +4,7 @@
 }
 <link href="~/CSS/Course.css" rel="stylesheet" />
 <div>
-    <h2>User Profile</h2>
+    <h2>User profile</h2>
     <hr />
 <link href="~/CSS/ProfileView.css" rel="stylesheet" />
 <dl class="dl-horizontal">
@@ -45,26 +45,18 @@
         <span class="close">&times;</span>
         <form>
             <div class="container">
-                <center>  <h4>Update User Details</h4> </center>
+                <center>  <h4>Update user details</h4> </center>
                 <hr>
-                <label> First Name </label>
+                <label> First name </label>
                 <input type="text" id="fst" name="firstname" placeholder="First Name" size="17" required />
-                <label> Last Name: </label>
+                <label> Last name: </label>
                 <input type="text" id="lst" name="lastname" placeholder="Last Name" size="17" required />
                 <label> Username: </label>
                 <input type="text" id="usr" name="username" placeholder="username" size="20" required /><br /><br />
-                <label> Email: </label>
+                <label> E-mail: </label>
                 <input type="text" id="eml" name="email" placeholder="E-mail" size="15" required />
                 <label> Phone: </label>
                 <input type="text" id="phn" name="phone" placeholder="Phone" size="15" required />
-                <label> Gender: </label>
-                <input type="text" id="gen" name="gender" placeholder="Gender" size="15" required />
-                <label> Date of birth: </label>
-                <input type="text" id="dob" name="dob" placeholder="Date of birth" size="15" required />
-                <label> State: </label>
-                <input type="text" id="stte" name="state" placeholder="State" size="15" required />
-                <label> City: </label>
-                <input type="text" id="cty" name="city" placeholder="City" size="15" required />
 
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" id="updtsbmt" class="btn btn-primary">Update</button>
@@ -76,6 +68,108 @@
 var modal = document.getElementById("myModal");
 var span = document.querySelector(".close");
 var idsecrt = "";
+// Function to validate email format
+function isValidEmail(email) {
+    var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+    return emailRegex.test(email);
+}
+
+// Function to validate phone number format
+function isValidPhone(phone) {
+    var phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(phone);
+}3
+
+// Function to validate if the input contains only letters
+function containsOnlyLetters(value) {
+    var lettersRegex = /^[A-Za-z]+$/;
+    return lettersRegex.test(value);
+}
+
+// Function to display error message beneath the input field
+function displayError(fieldId, message) {
+    $("#" + fieldId).addClass("input-error");
+    $("#" + fieldId + "-error").remove();
+    $("#" + fieldId).after("<div id='" + fieldId + "-error' class='error-message'>" + message + "</div>");
+}
+
+// Function to remove error message when the input is valid
+function removeError(fieldId) {
+    $("#" + fieldId).removeClass("input-error");
+    $("#" + fieldId + "-error").remove();
+}
+
+    $("#phn").on("focusout", function () {
+        var value = $(this).val();
+        if (value === "") {
+            displayError("phn", "Phone is required");
+        } else if (!isValidPhone(value)) {
+            displayError("phn", "Phone should contain exactly 10 digits");
+        } else {
+            removeError("phn");
+        }
+    });
+
+    $("#fst").on("focusout", function () {
+        var value = $(this).val();
+        if (value === "") {
+            displayError("fst", "First name is required");
+        } else if (!containsOnlyLetters(value)) {
+            displayError("fst", "First name should contain only letters");
+        } else {
+            removeError("fst");
+        }
+    });
+
+    $("#lst").on("focusout", function () {
+        var value = $(this).val();
+        if (value === "") {
+            displayError("lst", "Last name is required");
+        } else if (!containsOnlyLetters(value)) {
+            displayError("lst", "Last name should contain only letters");
+        } else {
+            removeError("lst");
+        }
+    });
+
+    // Validate user
+    $("#usr").on("input", function () {
+        var emailValue = $("#usr").val();
+        var usernameValue = $(this).val();
+
+        if (usernameValue === "") {
+            displayError("usr", "Usrename is required");
+        } else if (!isValidEmail(usernameValue)) {
+            displayError("usr", "Enter a valid username same as email");
+        } else {
+            removeError("usr");
+        }
+    });
+
+    // Validate email
+    $("#eml").on("input", function () {
+        var emailValue = $(this).val();
+        var usernameValue = $("#usr").val();
+
+        if (emailValue === "") {
+            displayError("eml", "Email is required");
+        } else if (!isValidEmail(emailValue)) {
+            displayError("eml", "Enter a valid email address");
+        }else {
+            removeError("eml");
+        }
+    });
+
+    // Update values in real time
+    $("#eml").on("input", function () {
+        var emailValue = $(this).val();
+        $("#usr").val(emailValue);
+    });
+
+    $("#usr").on("input", function () {
+        var usernameValue = $(this).val();
+        $("#eml").val(usernameValue);
+    });
 
 $(".myBtn").click(function () {
     $("#fst").val("");
@@ -83,10 +177,6 @@ $(".myBtn").click(function () {
     $("#usr").val("");
     $("#eml").val("");
     $("#phn").val("");
-    $("#gen").val("");
-    $("#stte").val("");
-    $("#cty").val("");
-    $("#dob").val("");
 
     var param = $(this).val();
     idsecrt = param;
@@ -118,10 +208,6 @@ $("#updtsbmt").click(function () {
     var usr = $("#usr").val();
     var eml = $("#eml").val();
     var phn = $("#phn").val();
-    var gen = $("#gen").val("");
-    var stte = $("#stte").val("");
-    var cty = $("#cty").val("");
-    var dob = $("#cty").dob("");
 
     var param = JSON.stringify({
         Id: idsecrt,
@@ -129,11 +215,7 @@ $("#updtsbmt").click(function () {
         LastName: lst,
         Username: usr,
         Email: eml,
-        Phone: phn,
-        Gender: gen,
-        State: stte,
-        City: cty,
-        DateOfBirth: dob
+        Phone: phn
     });
 
     modal.style.display = "block";
